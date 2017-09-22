@@ -1,0 +1,46 @@
+group 'opentracing-faultinjection'
+version '0.1'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("io.opentracing:opentracing-api:0.30.0")
+    compile("io.opentracing.brave:brave-opentracing:0.21.1")
+}
+
+idea{
+    project {
+        languageLevel = '1.6'
+    }
+    module {
+        downloadJavadoc = true // defaults to false
+        downloadSources = true
+    }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'faultinjection'
+            artifactId 'opentracing-faultinjection'
+            version '0.1'
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
